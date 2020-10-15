@@ -1,0 +1,5 @@
+@import "_mixins/font-face";
+
+@include font-face ("FreeSetC", "../fonts/FreeSetC/FreeSetC");
+@include font-face ("FreeSetDemiC", "../fonts/FreeSetDemiC/FreeSetDemiC", 600);
+
