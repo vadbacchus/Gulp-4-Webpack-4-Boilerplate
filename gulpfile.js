@@ -21,6 +21,7 @@ const gulpif        = require('gulp-if');
 const named         = require('vinyl-named');
 const glob          = require('glob');
 const path          = require('path');
+const modifyCssUrls = require('gulp-modify-css-urls');
 
 const { mode } = flags; // --mode=dev || --mode=prod
 const isDev = mode === 'dev' || mode === undefined;
@@ -68,7 +69,23 @@ function css() {
           level: { 2: { specialComments: 0 } } }
         )
       )
-    ) 
+    )
+    .pipe(modifyCssUrls({
+      modify(url, filePath) {
+        let stringForBuildDir = '';
+        if (url.indexOf('img/') !== -1 ) {
+          stringForBuildDir = url.substring(url.indexOf('img/'));
+          return `../${stringForBuildDir}`;
+        }
+
+        if (url.indexOf('fonts/') !== -1 ) {
+          stringForBuildDir = url.substring(url.indexOf('fonts/'));
+          return `../${stringForBuildDir}`;
+        }
+
+        return `${url}`;
+      }
+    }))
     .pipe(gulp.dest('./build/css'))
     .pipe(browserSync.stream());
 }
@@ -137,33 +154,60 @@ async function sg() {
         fields: '52px' /* side fields */
     },
     breakPoints: {
-      xl_2: {
+      bp_1600: {
         width: '1600px',
-        fields: '48px'
+        fields: '48px',
+        offset: '20px'
       },
-      xl_1: {
+      bp_1440: {
         width: '1440px',
-        fields: '36px'
+        fields: '36px',
+        offset: '20px'
       },
-      xl: {
+      bp_1366: {
         width: '1366px',
-        fields: '24px'
+        fields: '24px',
+        offset: '24px'
       },
-      lg: {
+      bp_1280: {
         width: '1280px', /* -> @media (max-width: 1100px) */
-        fields: '24px'
+        fields: '24px',
+        offset: '24px'
       },
-      md: {
+      bp_1100: {
+        width: '1100px',
+        fields: '24px',
+        offset: '24px'
+      },
+      bp_960: {
         width: '960px',
-        fields: '24px'
+        fields: '24px',
+        offset: '24px'
       },
-      sm: {
+      bp_800: {
+        width: '800px',
+        fields: '24px',
+        offset: '24px'
+      },
+      bp_768: {
         width: '768px',
-        fields: '24px' /* set fields only if you want to change container.fields */
+        fields: '24px', /* set fields only if you want to change container.fields */
+        offset: '24px'
       },
-      xs: {
+      bp_560: {
         width: '560px',
-        fields: '16px'
+        fields: '16px',
+        offset: '16px'
+      },
+      bp_375: {
+        width: '375px',
+        fields: '16px',
+        offset: '16px'
+      },
+      bp_360: {
+        width: '360px',
+        fields: '16px',
+        offset: '16px'
       }
 
       /* 
