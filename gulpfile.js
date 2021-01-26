@@ -14,8 +14,8 @@ const	browserSync   = require('browser-sync').create();
 const	notify        = require("gulp-notify");
 const	del           = require("del");
 const	wait          = require('gulp-wait');
-const	rsync         = require('gulp-rsync');
-const	webpack       = require('webpack-stream');
+const	webpackStream = require('webpack-stream');
+const	webpack       = require('webpack');
 const flags         = require('yargs').argv;
 const gulpif        = require('gulp-if');
 const named         = require('vinyl-named');
@@ -44,7 +44,14 @@ const webpackConfig = {
     }
   },
   mode: isDev ? 'development' : 'production',
-  devtool: isDev ? 'eval-source-map' : 'none'
+  devtool: isDev ? 'eval-source-map' : false,
+  plugins: [
+    new webpack.ProvidePlugin({
+        $: 'jquery',
+        jQuery: 'jquery',
+        'window.jQuery': 'jquery'
+    }),
+  ],
 };
 
 function html() {
@@ -71,7 +78,7 @@ function css() {
       )
     )
     .pipe(modifyCssUrls({
-      modify(url, filePath) {
+      modify(url) {
         let stringForBuildDir = '';
         if (url.indexOf('img/') !== -1 ) {
           stringForBuildDir = url.substring(url.indexOf('img/'));
@@ -96,7 +103,9 @@ function js() {
   return gulp
     .src([...jsFilesPaths])
     .pipe(named())
-    .pipe(webpack(webpackConfig))
+    .pipe(webpackStream(webpackConfig, webpack, function(err, stats) {
+      /* Use stats to do more things if needed */
+    }))
 	  .pipe(gulp.dest('build/js'));
 }
 
@@ -150,64 +159,47 @@ async function sg() {
     offset: '30px', /* gutter width px || % */
     mobileFirst: false, /* mobileFirst ? 'min-width' : 'max-width' */
     container: {
-        maxWidth: '1920px', /* max-width оn very large screen */
-        fields: '52px' /* side fields */
+        maxWidth: '1200px', /* max-width оn very large screen */
+        fields: '30px' /* side fields */
     },
     breakPoints: {
       bp_1600: {
         width: '1600px',
-        fields: '48px',
-        offset: '20px'
       },
       bp_1440: {
         width: '1440px',
-        fields: '36px',
-        offset: '20px'
       },
       bp_1366: {
         width: '1366px',
-        fields: '24px',
-        offset: '24px'
       },
       bp_1280: {
-        width: '1280px', /* -> @media (max-width: 1100px) */
-        fields: '24px',
-        offset: '24px'
+        width: '1280px', /* -> @media (max-width: 1280px) */
       },
       bp_1100: {
         width: '1100px',
-        fields: '24px',
-        offset: '24px'
       },
       bp_960: {
         width: '960px',
-        fields: '24px',
-        offset: '24px'
       },
       bp_800: {
         width: '800px',
-        fields: '24px',
-        offset: '24px'
       },
       bp_768: {
         width: '768px',
-        fields: '24px', /* set fields only if you want to change container.fields */
-        offset: '24px'
+        fields: '15px', /* set fields only if you want to change container.fields */
+        offset: '15px'
       },
       bp_560: {
         width: '560px',
-        fields: '16px',
-        offset: '16px'
       },
       bp_375: {
         width: '375px',
-        fields: '16px',
-        offset: '16px'
       },
       bp_360: {
         width: '360px',
-        fields: '16px',
-        offset: '16px'
+      },
+      bp_320: {
+        width: '360px',
       }
 
       /* 
