@@ -21,7 +21,8 @@ const gulpif        = require('gulp-if');
 const named         = require('vinyl-named');
 const glob          = require('glob');
 const path          = require('path');
-const modifyCssUrls = require('gulp-modify-css-urls');
+const sourcemaps    = require('gulp-sourcemaps');
+const cssUrls       = require('gulp-css-urls');
 
 const { mode } = flags; // --mode=dev || --mode=prod
 const isDev = mode === 'dev' || mode === undefined;
@@ -63,12 +64,13 @@ function html() {
 
 function css() {
   return gulp
-    .src('src/sass/**/*.scss')
+    .src('src/sass/**/*.scss'/* , { sourcemaps: true } */)
     .pipe(wait(500))
+    .pipe(gulpif(isDev, sourcemaps.init()))
     .pipe(sass({ outputStyle: 'expanded' }).on("error", notify.onError()))
     .pipe(rename({ suffix: '.min', prefix : '' }))
     .pipe(gcmq())
-    .pipe(autoprefixer(['last 15 versions']))
+    .pipe(gulpif(isProd, autoprefixer(['last 15 versions'])))
     .pipe(
       gulpif(
         isProd, 
@@ -77,8 +79,8 @@ function css() {
         )
       )
     )
-    .pipe(modifyCssUrls({
-      modify(url) {
+    .pipe(cssUrls(
+      function(url) {
         let stringForBuildDir = '';
         if (url.indexOf('img/') !== -1 ) {
           stringForBuildDir = url.substring(url.indexOf('img/'));
@@ -91,8 +93,11 @@ function css() {
         }
 
         return `${url}`;
+      }, {
+        sourcemaps: true,
       }
-    }))
+    ))
+    .pipe(gulpif(isDev, sourcemaps.write('.')))
     .pipe(gulp.dest('./build/css'))
     .pipe(browserSync.stream());
 }
@@ -220,16 +225,21 @@ async function sg() {
 function img() {
   return gulp
     .src('src/img/**/*')
-    .pipe(imagemin(
-      [
-        imagemin.gifsicle({interlaced: true}),
-        imagemin.mozjpeg({progressive: true}),
-        imagemin.optipng({optimizationLevel: 5}),
-      ],
-      {
-        verbose: true
-      }
-    ))
+    .pipe(
+      gulpif(
+        isProd, 
+        imagemin(
+          [
+            imagemin.gifsicle({interlaced: true}),
+            imagemin.mozjpeg({progressive: true}),
+            imagemin.optipng({optimizationLevel: 5}),
+          ],
+          {
+            verbose: true
+          }
+        )
+      )
+    )
     .pipe(gulp.dest('build/img'));
 }
 

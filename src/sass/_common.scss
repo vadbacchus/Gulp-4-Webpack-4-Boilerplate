@@ -43,3 +43,51 @@ body {
 .wrapper {
   @include wrapper;
 }
+
+.wrapper-full {
+  @include wrapper-full;
+}
+
+a {
+  text-decoration: none;
+}
+
+button, input {
+  &:focus {
+    outline: none;
+  }
+}
+
+button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: 400 16px $f-regular;
+  padding: 0;
+}
+
+input {
+  // hide basic styles for input in iOS
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  // hide cross icon in Edge
+  &::-ms-clear,
+  &::-ms-reveal {
+    display: none;
+  }
+
+  // hide box-shadow of empty required input in FF
+  &:required:invalid {
+    box-shadow: none;
+  }
+}
+
+strong {
+  font-family: $f-bold;
+}
+
+.hidden {
+  display: none;
+}
