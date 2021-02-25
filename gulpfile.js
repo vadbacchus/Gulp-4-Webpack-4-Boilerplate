@@ -133,6 +133,7 @@ function watch() {
     ['./src/*.html', './src/partials/**/*.html'], 
     gulp.series(html, reload)
   );
+  gulp.watch('src/img/**/*', gulp.series(img, reload));
 }
 
 function reload(done) {
