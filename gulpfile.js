@@ -35,7 +35,12 @@ const webpackConfig = {
         test: /\.js/,
         loader: 'babel-loader',
         exclude: '/node_modules/'
-      }
+      },
+      { 
+        test: /\.json$/, 
+        type: 'javascript/auto',
+        loader: 'json-loader',
+      },
     ]
   },
   resolve: {
@@ -69,7 +74,7 @@ function css() {
     .pipe(gulpif(isDev, sourcemaps.init()))
     .pipe(sass({ outputStyle: 'expanded' }).on("error", notify.onError()))
     .pipe(rename({ suffix: '.min', prefix : '' }))
-    .pipe(gcmq())
+    .pipe(gulpif(isProd, gcmq()))
     .pipe(gulpif(isProd, autoprefixer(['last 15 versions'])))
     .pipe(
       gulpif(
@@ -101,6 +106,7 @@ function css() {
     .pipe(gulp.dest('./build/css'))
     .pipe(browserSync.stream());
 }
+
 
 function js() {
   const jsFilesPaths = glob.sync('./src/js/*.js');
