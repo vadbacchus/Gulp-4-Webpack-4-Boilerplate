@@ -108,15 +108,39 @@ function css() {
 }
 
 
+/* function js() {
+  const jsFilesPaths = glob.sync('./src/js/*.js');
+  return gulp
+    .src([...jsFilesPaths])
+    .pipe(named())
+    .pipe(
+      webpackStream(webpackConfig, webpack, function(err, stats) {}))
+	  .pipe(gulp.dest('build/js'));
+} */
+
+// js task for including core-js into all entries
+
 function js() {
   const jsFilesPaths = glob.sync('./src/js/*.js');
+  const pat = /(?<=js\/)(.*?)(?=\.js)/;
+  const entriesArr = jsFilesPaths.map((item) => {
+    const name = item.match(pat)[0];
+    return {
+      [name]: ['core-js/stable', item]
+    };
+  });
+
+  const entries = Object.assign({}, ...entriesArr);
 
   return gulp
     .src([...jsFilesPaths])
     .pipe(named())
-    .pipe(webpackStream(webpackConfig, webpack, function(err, stats) {
-      /* Use stats to do more things if needed */
-    }))
+    .pipe(
+      webpackStream({
+        ...webpackConfig,
+        entry: {...entries},
+        output: { filename: '[name].js'}
+      }, webpack, function(err, stats) {}))
 	  .pipe(gulp.dest('build/js'));
 }
 
