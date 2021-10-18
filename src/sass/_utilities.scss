@@ -13,7 +13,7 @@
   }
 }
 
-@mixin mediamin($min-width) {
+@mixin mmin($min-width) {
   @media screen and (min-width: $min-width) {
     @content;
   }
