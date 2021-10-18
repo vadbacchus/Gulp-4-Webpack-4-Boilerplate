@@ -29,6 +29,7 @@ const isDev = mode === 'dev' || mode === undefined;
 const isProd = mode === 'prod';
 
 const webpackConfig = {
+  target: 'es5',
   module: {
     rules: [
       {
