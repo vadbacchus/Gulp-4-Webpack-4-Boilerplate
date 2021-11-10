@@ -1,0 +1,72 @@
+@use "../abstracts/mixins" as *;
+@use "../abstracts/global-variables" as *;
+
+@include reset;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+::placeholder {
+  color: #000;
+}
+
+::selection {
+  background-color: #fdb815;
+  color: #fff;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: $f-regular;
+  font-size: 16px;
+  line-height: 1.65;
+  min-width: 320px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.container {
+  overflow: hidden;
+  width: 100%;
+}
+
+button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font: 400 16px $f-regular;
+  padding: 0;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+input {
+  // hide basic styles for input in iOS
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  // hide cross icon in Edge
+  &::-ms-clear,
+  &::-ms-reveal {
+    display: none;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  // hide box-shadow of empty required input in FF
+  &:required:invalid {
+    box-shadow: none;
+  }
+}

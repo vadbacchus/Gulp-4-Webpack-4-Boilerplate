@@ -1,0 +1,13 @@
+@use "../abstracts/global-variables" as *;
+
+h1 {
+  font-family: $f-bold;
+}
+
+a {
+  text-decoration: none;
+}
+
+strong {
+  font-family: $f-bold;
+}

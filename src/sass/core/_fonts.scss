@@ -1,0 +1,11 @@
+@use "../abstracts/mixins" as *;
+
+@include font-face(
+  "MontserratRegular",
+  "../../fonts/MontserratRegular/MontserratRegular"
+);
+@include font-face(
+  "MontserratBold",
+  "../../fonts/MontserratBold/MontserratBold",
+  bold
+);

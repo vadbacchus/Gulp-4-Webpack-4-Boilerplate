@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 const gulp          = require('gulp');
 const htmlPartial   = require('gulp-html-partial');
-const	sass          = require('gulp-sass');
+const	sass          = require('gulp-sass')(require('sass'));
 const	cleancss      = require('gulp-clean-css');
 const	autoprefixer  = require('gulp-autoprefixer');
 const	smartgrid     = require('smart-grid');
@@ -21,8 +21,9 @@ const gulpif        = require('gulp-if');
 const named         = require('vinyl-named');
 const glob          = require('glob');
 const path          = require('path');
-const sourcemaps    = require('gulp-sourcemaps');
+/* const sourcemaps    = require('gulp-sourcemaps'); */
 const cssUrls       = require('gulp-css-urls');
+const gs            = require('gulp-obfuscate-selectors');
 
 const { mode } = flags; // --mode=dev || --mode=prod
 const isDev = mode === 'dev' || mode === undefined;
@@ -72,8 +73,8 @@ function css() {
   return gulp
     .src('src/sass/**/*.scss'/* , { sourcemaps: true } */)
     .pipe(wait(500))
-    .pipe(gulpif(isDev, sourcemaps.init()))
-    .pipe(sass({ outputStyle: 'expanded' }).on("error", notify.onError()))
+    // .pipe(gulpif(isDev, sourcemaps.init())) TODO: fix cssUrls plugin or sourcemaps plugin because of incorrect result sourcemaps
+    .pipe(sass({ outputStyle: isProd ? 'compressed' : 'expanded' }).on("error", notify.onError()))
     .pipe(rename({ suffix: '.min', prefix : '' }))
     .pipe(gulpif(isProd, gcmq()))
     .pipe(gulpif(isProd, autoprefixer(['last 15 versions'])))
@@ -85,7 +86,7 @@ function css() {
         )
       )
     )
-    .pipe(cssUrls(
+    /* .pipe(cssUrls(
       function(url) {
         let stringForBuildDir = '';
         if (url.indexOf('img/') !== -1 ) {
@@ -100,10 +101,10 @@ function css() {
 
         return `${url}`;
       }, {
-        sourcemaps: true,
+        // sourcemaps: true, TODO: fix cssUrls plugin or sourcemaps plugin because of incorrect result sourcemaps
       }
-    ))
-    .pipe(gulpif(isDev, sourcemaps.write('.')))
+    )) */
+    // .pipe(gulpif(isDev, sourcemaps.write('.'))) TODO: fix cssUrls plugin or sourcemaps plugin because of incorrect result sourcemaps
     .pipe(gulp.dest('./build/css'))
     .pipe(browserSync.stream());
 }
@@ -281,7 +282,14 @@ function fonts() {
     .pipe(gulp.dest('build/fonts'));
 }
 
+function obfuscate() {
+  return gulp.src(['build/**/*.css', 'build/**/*.html'])
+  .pipe(gs.run())
+  .pipe(gulp.dest('build'));
+}
+
 const build = gulp.series(clean, gulp.parallel(html, css, js, img, fonts));
+const hardBuild = gulp.series(clean, gulp.parallel(html, css, js, img, fonts), obfuscate);
 
 gulp.task('html', html);
 gulp.task('reload', reload);
@@ -293,4 +301,6 @@ gulp.task('sg', sg);
 gulp.task('img', img); 
 gulp.task('watch', watch);
 gulp.task('build', build);
+gulp.task('hardBuild', hardBuild);
+gulp.task('obfuscate', obfuscate);
 gulp.task('default', gulp.series('build', 'watch'));

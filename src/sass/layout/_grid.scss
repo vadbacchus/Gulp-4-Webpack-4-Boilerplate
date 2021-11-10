@@ -1,0 +1,10 @@
+// write grid styles here
+@use "../abstracts/mixins" as *;
+
+.wrapper {
+  @include wrapper;
+}
+
+.wrapper-full {
+  @include wrapper-full;
+}

@@ -1,0 +1,23 @@
+// write homepage styles here
+@use "../abstracts/global-variables" as *;
+
+.test-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.test-heading {
+  color: #4507ac;
+  font-family: $f-regular;
+  font-size: 72px;
+  line-height: 1.3;
+  margin: auto;
+  text-align: center;
+  width: 100%;
+
+  span {
+    display: block;
+    font-family: $f-bold;
+  }
+}
