@@ -78,15 +78,8 @@ function css() {
     .pipe(rename({ suffix: '.min', prefix : '' }))
     .pipe(gulpif(isProd, gcmq()))
     .pipe(gulpif(isProd, autoprefixer(['last 15 versions'])))
-    .pipe(
-      gulpif(
-        isProd, 
-        cleancss( {
-          level: { 2: { specialComments: 0 } } }
-        )
-      )
-    )
-    /* .pipe(cssUrls(
+    
+    .pipe(cssUrls(
       function(url) {
         let stringForBuildDir = '';
         if (url.indexOf('img/') !== -1 ) {
@@ -103,7 +96,15 @@ function css() {
       }, {
         // sourcemaps: true, TODO: fix cssUrls plugin or sourcemaps plugin because of incorrect result sourcemaps
       }
-    )) */
+    ))
+    .pipe(
+      gulpif(
+        isProd, 
+        cleancss( {
+          level: { 2: { specialComments: 0 } } }
+        )
+      )
+    )
     // .pipe(gulpif(isDev, sourcemaps.write('.'))) TODO: fix cssUrls plugin or sourcemaps plugin because of incorrect result sourcemaps
     .pipe(gulp.dest('./build/css'))
     .pipe(browserSync.stream());
@@ -201,6 +202,12 @@ async function sg() {
         fields: '30px' /* side fields */
     },
     breakPoints: {
+      bp_2560: {
+        width: '2560px',
+      },
+      bp_1920: {
+        width: '1920px',
+      },
       bp_1600: {
         width: '1600px',
       },
@@ -252,7 +259,7 @@ async function sg() {
     }
   };
   
-  smartgrid('./src/sass/_mixins/', settings);
+  smartgrid('./src/sass/abstracts/mixins/', settings);
 }
 
 function img() {

@@ -1,7 +1,4 @@
-@use "../abstracts/mixins" as *;
 @use "../abstracts/global-variables" as *;
-
-@include reset;
 
 *,
 *::before,
@@ -14,7 +11,7 @@
 }
 
 ::selection {
-  background-color: #fdb815;
+  background-color: blue;
   color: #fff;
 }
 
@@ -24,24 +21,110 @@ body {
 }
 
 body {
-  font-family: $f-regular;
+  font-family: $f-4;
   font-size: 16px;
   line-height: 1.65;
-  min-width: 320px;
+  min-height: 100vh;
   overflow-x: hidden;
   position: relative;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
 }
 
-.container {
-  overflow: hidden;
-  width: 100%;
+body,
+div,
+dl,
+dt,
+dd,
+ul[class],
+li[class],
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+input,
+textarea,
+p,
+blockquote,
+th,
+td {
+  margin: 0;
+  padding: 0;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+main {
+  display: block;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ol,
+ul {
+  font-weight: normal;
+}
+
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+fieldset,
+img,
+abbr {
+  border: 0;
+}
+
+sup {
+  vertical-align: text-top;
+}
+
+sub {
+  vertical-align: text-bottom;
+}
+
+input,
+button,
+label,
+textarea,
+select {
+  appearance: none;
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
   background: transparent;
   border: none;
   cursor: pointer;
-  font: 400 16px $f-regular;
+  font: inherit;
   padding: 0;
 
   &:focus {
@@ -68,5 +151,35 @@ input {
   // hide box-shadow of empty required input in FF
   &:required:invalid {
     box-shadow: none;
+  }
+}
+
+textarea {
+  display: block;
+  max-width: 100%;
+  resize: none;
+  width: 100%;
+}
+
+a {
+  -webkit-tap-highlight-color: transparent;
+  text-decoration: none;
+
+  &:not([class]) {
+    text-decoration-skip-ink: auto;
+  }
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
