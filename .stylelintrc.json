@@ -10,8 +10,8 @@
       "custom-properties",
       "dollar-variables",
       "declarations",
-      "rules",
-      "at-rules"     
+      "at-rules",
+      "rules"
     ],
     "order/properties-alphabetical-order": true,
     "csstools/use-nesting": ["always", { "except": [":selection", "/^:dir/i"] }],

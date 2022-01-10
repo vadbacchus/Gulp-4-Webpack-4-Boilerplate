@@ -71,7 +71,7 @@ function html() {
 
 function css() {
   return gulp
-    .src('src/sass/**/*.scss'/* , { sourcemaps: true } */)
+    .src('src/scss/**/*.scss'/* , { sourcemaps: true } */)
     .pipe(wait(500))
     // .pipe(gulpif(isDev, sourcemaps.init())) TODO: fix cssUrls plugin or sourcemaps plugin because of incorrect result sourcemaps
     .pipe(sass({ outputStyle: isProd ? 'compressed' : 'expanded' }).on("error", notify.onError()))
@@ -110,17 +110,6 @@ function css() {
     .pipe(browserSync.stream());
 }
 
-
-/* function js() {
-  const jsFilesPaths = glob.sync('./src/js/*.js');
-  return gulp
-    .src([...jsFilesPaths])
-    .pipe(named())
-    .pipe(
-      webpackStream(webpackConfig, webpack, function(err, stats) {}))
-	  .pipe(gulp.dest('build/js'));
-} */
-
 // js task for including core-js into all entries
 
 function js() {
@@ -154,12 +143,9 @@ function watch() {
     }
   });
 
-  gulp.watch('./src/sass/**/*.scss', css);
+  gulp.watch('./src/scss/**/*.scss', css);
   gulp.watch('./src/js/**/*.js', gulp.series(js, reload));
-  gulp.watch(
-    ['./src/*.html', './src/partials/**/*.html'], 
-    gulp.series(html, reload)
-  );
+  gulp.watch('./src/**/*.html', gulp.series(html, reload));
   gulp.watch('src/img/**/*', gulp.series(img, reload));
 }
 
@@ -186,80 +172,6 @@ function svg() {
     }))
   .pipe(svgstore())
   .pipe(gulp.dest('build/img'));
-}
-
-async function sg() {
-
-  /* It's principal settings in smart grid project */
-  const settings = {
-    filename: '_smart-grid',
-    outputStyle: 'scss', /* less || scss || sass || styl */
-    columns: 12, /* number of grid columns */
-    offset: '30px', /* gutter width px || % */
-    mobileFirst: false, /* mobileFirst ? 'min-width' : 'max-width' */
-    container: {
-        maxWidth: '1200px', /* max-width оn very large screen */
-        fields: '30px' /* side fields */
-    },
-    breakPoints: {
-      bp_2560: {
-        width: '2560px',
-      },
-      bp_1920: {
-        width: '1920px',
-      },
-      bp_1600: {
-        width: '1600px',
-      },
-      bp_1440: {
-        width: '1440px',
-      },
-      bp_1366: {
-        width: '1366px',
-      },
-      bp_1280: {
-        width: '1280px', /* -> @media (max-width: 1280px) */
-      },
-      bp_1100: {
-        width: '1100px',
-      },
-      bp_960: {
-        width: '960px',
-      },
-      bp_800: {
-        width: '800px',
-      },
-      bp_768: {
-        width: '768px',
-        fields: '15px', /* set fields only if you want to change container.fields */
-        offset: '15px'
-      },
-      bp_560: {
-        width: '560px',
-      },
-      bp_375: {
-        width: '375px',
-      },
-      bp_360: {
-        width: '360px',
-      },
-      bp_320: {
-        width: '360px',
-      }
-
-      /* 
-      We can create any quantity of break points.
-
-      some_name: {
-          width: 'Npx',
-          fields: 'N(px|%|rem)',
-          offset: 'N(px|%|rem)'
-      }
-      */
-    }
-  };
-  
-  smartgrid('./src/sass/abstracts/mixins/', settings);
 }
 
 function img() {

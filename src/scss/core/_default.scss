@@ -1,4 +1,4 @@
-@use "../abstracts/global-variables" as *;
+@use "../abstractions/global-variables" as *;
 
 *,
 *::before,
@@ -36,8 +36,8 @@ div,
 dl,
 dt,
 dd,
-ul[class],
-li[class],
+ul,
+li,
 h1,
 h2,
 h3,
@@ -86,8 +86,8 @@ ul {
   font-weight: normal;
 }
 
-ul[class],
-ol[class] {
+ul,
+ol {
   list-style: none;
 }
 
@@ -142,6 +142,18 @@ input {
   &::-ms-clear,
   &::-ms-reveal {
     display: none;
+  }
+
+  // Hide Arrows From Input Number: Chrome, Safari, Edge, Opera
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  // Hide Arrows From Input Number: Firefox
+  &[type="number"] {
+    -moz-appearance: textfield;
   }
 
   &:focus {

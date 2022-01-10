@@ -1,5 +1,6 @@
 // write homepage styles here
-@use "../abstracts/global-variables" as *;
+@use "../abstractions/global-variables" as *;
+@use "../abstractions/mixins" as *;
 
 .test-wrapper {
   display: flex;
@@ -19,5 +20,18 @@
   span {
     display: block;
     font-family: $f-7;
+  }
+}
+
+.test {
+  border: 1px solid #fff;
+  color: #fff;
+
+  button {
+    color: #000;
+  }
+
+  .test-nested {
+    color: black;
   }
 }

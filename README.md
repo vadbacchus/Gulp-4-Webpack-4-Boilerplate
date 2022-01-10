@@ -265,3 +265,6 @@ ipconfig
 ```
 http://{IPv4}:3000
 ```
+<h2 id="useful"> Корисні матеріали:  </h2>
+
+- [Генератор фавіконок](https://realfavicongenerator.net) 
